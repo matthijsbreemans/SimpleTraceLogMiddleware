@@ -29,7 +29,7 @@ namespace SimpleTraceLogMiddleware.Tests
                 var response = await server.HttpClient.GetAsync("/");
 
                 //check if our tracelistener has the correct value
-                Assert.AreEqual<string>(listener.Value, "ERROR 500 - Internal server error");
+                Assert.AreEqual<string>(listener.Value, "[ERROR GET / ] 500 - Internal server error");
             }
         }
 
