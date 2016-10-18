@@ -1,0 +1,1 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/91w8hv4ql2k42px9?svg=true)](https://ci.appveyor.com/project/matthijsbreemans/simpletracelogmiddleware)
