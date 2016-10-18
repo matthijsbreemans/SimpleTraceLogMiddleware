@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Matthijs Breemans</authors>
+    <owners>Matthijs Breemans</owners>
+    <projectUrl>https://github.com/matthijsbreemans/SimpleTraceLogMiddleware</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple webapi tracelog library</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>Simple webapi tracelog library</tags>
+  </metadata>
+</package>
