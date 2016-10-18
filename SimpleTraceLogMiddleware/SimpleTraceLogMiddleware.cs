@@ -37,31 +37,38 @@ namespace SimpleTraceLogMiddleware
             await nextFunc.Invoke(env);
 
             //Parse response
-            object responseStatusCode;
-            object responseReasonPhrase;
+            var responseStatusCode = tryGetFromDictionary(env, "ResponseStatusCode");
+            var responseReasonPhrase = tryGetFromDictionary(env, "ResponseReasonPhrase");
+            var requestPath = tryGetFromDictionary(env, "RequestPath");
+            var requestMethod = tryGetFromDictionary(env, "RequestMethod");
+            var requestQueryString = tryGetFromDictionary(env, "RequestQueryString");
 
             //quick way to fix OWIN's header's mismatch
-            if (env.TryGetValue(env.Keys.First(x => x.Contains("ResponseStatusCode")), out responseStatusCode) &&
-                env.TryGetValue(env.Keys.First(x => x.Contains("ResponseReasonPhrase")), out responseReasonPhrase))
+            if (!string.IsNullOrWhiteSpace(responseStatusCode))
             {
-                if (responseStatusCode != null)
+                var fullpath = requestMethod + " " + requestPath +
+                               (string.IsNullOrWhiteSpace(requestQueryString) ? string.Empty : "?" + requestQueryString);
+                if (responseStatusCode.StartsWith("5"))
                 {
-                    if (responseStatusCode.ToString().StartsWith("5"))
-                    {
-                        Trace.TraceError("ERROR " + responseStatusCode + " - " + responseReasonPhrase);
-                    }
-                    else if (responseStatusCode.ToString().StartsWith("4") || responseStatusCode.ToString().StartsWith("4"))
-                    {
-                        Trace.TraceWarning("WARN " + responseStatusCode + " - " + responseReasonPhrase);
-                    }
-                    else
-                    {
-                        Trace.TraceInformation("INFO " + responseStatusCode + " - " + responseReasonPhrase);
-                    }
-
+                    Trace.TraceError("[ERROR " + fullpath + " ] " + responseStatusCode + " - " + responseReasonPhrase);
                 }
+                else if (responseStatusCode.ToString().StartsWith("4") || responseStatusCode.ToString().StartsWith("4"))
+                {
+                    Trace.TraceWarning("[WARN " + fullpath + " ] " + responseStatusCode + " - " + responseReasonPhrase);
+                }
+                else
+                {
+                    Trace.TraceInformation("[INFO " + fullpath + " ] " + responseStatusCode + " - " + responseReasonPhrase);
+                }
+
             }
 
+        }
+
+        private string tryGetFromDictionary(IDictionary<string, object> dictionary, string match)
+        {
+            var key = dictionary.Keys.FirstOrDefault(x => x.EndsWith(match));
+            return (key != null ? dictionary[key].ToString() : string.Empty);
         }
     }
     /// <summary>
